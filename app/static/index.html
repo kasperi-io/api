@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Prices</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        #controls { margin-bottom: 20px; }
+        #chart-container { position: relative; height: 400px; width: 100%; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Electricity Prices</h1>
+
+    <div id="controls">
+        <label for="start-date">Start:</label>
+        <input type="datetime-local" id="start-date">
+        <label for="end-date">End:</label>
+        <input type="datetime-local" id="end-date">
+        <button onclick="fetchData()">Update</button>
+    </div>
+
+    <div id="chart-container">
+        <canvas id="priceChart"></canvas>
+    </div>
+
+    <h2>Recent Prices</h2>
+    <table id="price-table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Price (c/kWh)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be added here -->
+        </tbody>
+    </table>
+
+    <script>
+        let chart;
+
+        function initDates() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(23, 59, 0, 0);
+
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            yesterday.setHours(0, 0, 0, 0);
+
+            // Format for input type="datetime-local" (YYYY-MM-DDTHH:mm)
+            const format = (d) => d.toISOString().slice(0, 16);
+
+            document.getElementById('start-date').value = format(yesterday);
+            document.getElementById('end-date').value = format(tomorrow);
+        }
+
+        async function fetchData() {
+            const start = new Date(document.getElementById('start-date').value).toISOString();
+            const end = new Date(document.getElementById('end-date').value).toISOString();
+
+            try {
+                const response = await fetch(`/prices?start_date=${start}&end_date=${end}&timezone_str=${Intl.DateTimeFormat().resolvedOptions().timeZone}`);
+                const data = await response.json();
+                updateChart(data);
+                updateTable(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Failed to fetch data');
+            }
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            const prices = data.map(p => ({ x: p.timestamp, y: p.price }));
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Electricity Price (c/kWh)',
+                        data: prices,
+                        borderColor: 'blue',
+                        borderWidth: 1,
+                        pointRadius: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'hour',
+                                displayFormats: {
+                                    hour: 'dd.MM HH:mm'
+                                }
+                            },
+                            title: { display: true, text: 'Time' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Price (c/kWh)' }
+                        }
+                    },
+                    plugins: {
+                        zoom: {
+                            zoom: {
+                                wheel: { enabled: true },
+                                pinch: { enabled: true },
+                                mode: 'x',
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'x',
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTable(data) {
+            const tbody = document.querySelector('#price-table tbody');
+            tbody.innerHTML = '';
+
+            // Show last 20 prices, reversed (newest first)
+            const recent = [...data].reverse().slice(0, 20);
+
+            recent.forEach(p => {
+                const row = tbody.insertRow();
+                const cellTime = row.insertCell();
+                const cellPrice = row.insertCell();
+
+                cellTime.textContent = new Date(p.timestamp).toLocaleString();
+                cellPrice.textContent = p.price !== null ? p.price.toFixed(2) : 'N/A';
+            });
+        }
+
+        initDates();
+        fetchData();
+    </script>
+</body>
+</html>

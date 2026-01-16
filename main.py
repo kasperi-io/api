@@ -26,6 +26,9 @@ except Exception as e:
     raise
 
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 tags_metadata = [
     {
         "name": "electricity",
@@ -35,9 +38,11 @@ tags_metadata = [
 
 app = FastAPI(openapi_tags=tags_metadata)
 
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
 app.include_router(electricity.router)
 
 @app.get("/", include_in_schema=False)
 async def root():
-    """Redirect root path to API documentation."""
-    return RedirectResponse(url="/docs")
+    """Serve the frontend."""
+    return FileResponse("app/static/index.html")

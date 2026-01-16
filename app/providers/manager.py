@@ -13,6 +13,7 @@ from app.logging_config import logger
 from app.models import ElectricityPrice
 from .base import ElectricityPriceProvider, ProviderError
 from .entsoe import EntsoeClient
+from .nordpool import NordpoolClient
 
 
 class ProviderManager:
@@ -30,6 +31,13 @@ class ProviderManager:
 
     def _initialize_providers(self):
         """Initialize all available providers in priority order."""
+        # Nordpool
+        nordpool = NordpoolClient(client=None)
+        if nordpool.is_available():
+            self._providers.append(nordpool)
+            logger.info("Nordpool provider initialized")
+
+        # ENTSO-E
         entsoe = EntsoeClient(client=None)
         if entsoe.is_available():
             self._providers.append(entsoe)
@@ -37,7 +45,7 @@ class ProviderManager:
         else:
             logger.warning("ENTSO-E provider not available (missing API key)")
 
-        # Sort providers by priority (only one provider now, but keeping for future extensibility)
+        # Sort providers by priority
         self._providers.sort(key=lambda p: p.get_priority())
 
         if not self._providers:
