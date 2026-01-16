@@ -11,6 +11,7 @@ except ImportError:
 from app import schemas, models
 from app.crud import electricity as crud
 from app.database import get_db
+from app.services.electricity_service import ElectricityService
 
 router = APIRouter(
     prefix="",
@@ -18,73 +19,6 @@ router = APIRouter(
 )
 
 from app.logging_config import logger
-
-def convert_to_timezone(prices: List[models.ElectricityPrice], target_tz: str = "UTC") -> List[models.ElectricityPrice]:
-    """Convert UTC prices to target timezone."""
-    if target_tz == "UTC":
-        return prices
-
-    try:
-        tz = ZoneInfo(target_tz)
-
-        # Modify the timestamps in place (since we're returning the response, not saving to DB)
-        for price in prices:
-            # Ensure timestamp is UTC-aware first
-            utc_timestamp = price.timestamp
-            if utc_timestamp.tzinfo is None:
-                utc_timestamp = utc_timestamp.replace(tzinfo=timezone.utc)
-
-            # Convert to target timezone
-            price.timestamp = utc_timestamp.astimezone(tz)
-
-        return prices
-    except Exception as e:
-        # If timezone conversion fails, return original prices
-        logger.error("Timezone conversion failed: %s", e)
-        return prices
-
-def ensure_utc(dt: datetime, source_timezone: str = "UTC") -> datetime:
-    """
-    Ensure datetime is in UTC.
-
-    Args:
-        dt: The datetime to convert
-        source_timezone: The timezone to assume for naive datetimes
-    """
-    if dt.tzinfo is None:
-        # If naive datetime and source timezone is not UTC, treat as source timezone
-        if source_timezone != "UTC":
-            try:
-                tz = ZoneInfo(source_timezone)
-                # Make datetime aware in source timezone, then convert to UTC
-                return dt.replace(tzinfo=tz).astimezone(timezone.utc)
-            except Exception as e:
-                logger.warning("Invalid timezone %s, treating naive datetime as UTC: %s", source_timezone, e)
-                return dt.replace(tzinfo=timezone.utc)
-        else:
-            # Assume naive datetime is UTC
-            return dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(timezone.utc)
-
-def get_local_day_range_utc(timezone_str: str, days: int = 1):
-    """Return (start_utc, end_utc) for the local day(s) based on timezone_str.
-
-    - Start is local 00:00 of 'today' in the given timezone
-    - End is inclusive end (23:45) of the last day in the range
-    - days=1 => today only; days=2 => today + tomorrow
-    """
-    try:
-        tz = timezone.utc if timezone_str == "UTC" else ZoneInfo(timezone_str)
-    except Exception:
-        tz = timezone.utc
-
-    current_date_local = datetime.now(tz).date()
-    start_of_day_local = datetime.combine(current_date_local, datetime.min.time()).replace(tzinfo=tz)
-    end_local = start_of_day_local + timedelta(days=days) - timedelta(minutes=15)
-
-    start_utc = start_of_day_local.astimezone(timezone.utc)
-    end_utc = end_local.astimezone(timezone.utc)
-    return start_utc, end_utc
 
 @router.get("/prices", response_model=schemas.ElectricityPriceResponse)
 async def get_electricity_prices(
@@ -104,14 +38,14 @@ async def get_electricity_prices(
     as being in the timezone_str timezone before conversion to UTC for database query.
     """
     # Convert input dates to UTC, treating naive datetimes as being in timezone_str
-    start_date_utc = ensure_utc(start_date, timezone_str)
-    end_date_utc = ensure_utc(end_date, timezone_str)
+    start_date_utc = ElectricityService.ensure_utc(start_date, timezone_str)
+    end_date_utc = ElectricityService.ensure_utc(end_date, timezone_str)
 
     # Query the database for prices (all in UTC) using async CRUD
     prices = await crud.get_electricity_prices(db, start_date_utc, end_date_utc)
 
     # Convert timestamps to requested timezone
-    prices = convert_to_timezone(prices, timezone_str)
+    prices = ElectricityService.convert_to_timezone(prices, timezone_str)
 
     return schemas.ElectricityPriceResponse.from_db_model_list(prices)
 
@@ -131,7 +65,7 @@ async def get_cheapest_intervals_today(
 
     # Calculate "today" in the requested timezone, then convert to UTC for database query
     # Today in local timezone (00:00 -> 23:45 inclusive)
-    start_of_day_utc, end_of_day_utc = get_local_day_range_utc(timezone_str, days=1)
+    start_of_day_utc, end_of_day_utc = ElectricityService.get_local_day_range_utc(timezone_str, days=1)
 
     db_prices = await crud.get_electricity_prices(db, start_of_day_utc, end_of_day_utc)
 
@@ -150,7 +84,7 @@ async def get_cheapest_intervals_today(
         # cheapest_hours.sort(key=lambda x: x.timestamp)
 
     # Convert timestamps to requested timezone
-    cheapest = convert_to_timezone(cheapest, timezone_str)
+    cheapest = ElectricityService.convert_to_timezone(cheapest, timezone_str)
 
     return schemas.ElectricityPriceResponse.from_db_model_list(cheapest)
 
@@ -163,7 +97,7 @@ async def get_latest_electricity_prices(
     now_utc = datetime.now(timezone.utc)
 
     # Today + tomorrow in local timezone
-    start_utc, end_utc = get_local_day_range_utc(timezone_str, days=2)
+    start_utc, end_utc = ElectricityService.get_local_day_range_utc(timezone_str, days=2)
 
     # Query the database for prices (UTC)
     db_prices = await crud.get_electricity_prices(db, start_utc, end_utc)
@@ -194,7 +128,7 @@ async def get_latest_electricity_prices(
         current_idx = last_idx if last_idx is not None else 0
 
     # Convert timestamps to requested timezone (in-place)
-    db_prices = convert_to_timezone(db_prices, timezone_str)
+    db_prices = ElectricityService.convert_to_timezone(db_prices, timezone_str)
     current_converted = db_prices[current_idx]
 
     return schemas.ElectricityLatestResponse.from_db_models(
