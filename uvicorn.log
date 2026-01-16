@@ -1,0 +1,199 @@
+/app/app/routers/electricity.py:25: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+  start_date: datetime = Query(
+/app/app/routers/electricity.py:28: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+  end_date: datetime = Query(
+2026-01-16 11:35:55,192 - app - INFO - Migration tracking table ready
+2026-01-16 11:35:55,192 - app - INFO - Found 1 total migrations
+2026-01-16 11:35:55,197 - app - INFO - Migration m002_nullable_price already applied, skipping
+2026-01-16 11:35:55,197 - app - INFO - No new migrations to apply
+2026-01-16 11:35:55,197 - app - INFO - Database is up to date
+2026-01-16 11:35:55,204 - uvicorn.error - INFO - Started server process [15722]
+2026-01-16 11:35:55,204 - uvicorn.error - INFO - Waiting for application startup.
+2026-01-16 11:35:55,205 - uvicorn.error - INFO - Application startup complete.
+2026-01-16 11:35:55,206 - uvicorn.error - INFO - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-01-16 11:36:34,158 - uvicorn.access - INFO - 127.0.0.1:42628 - "GET / HTTP/1.1" 500
+2026-01-16 11:36:34,159 - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/responses.py", line 349, in __call__
+    stat_result = await anyio.to_thread.run_sync(os.stat, self.path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2502, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'app/static/index.html'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 410, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/fastapi/applications.py", line 1135, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/fastapi/routing.py", line 115, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/fastapi/routing.py", line 102, in app
+    await response(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/responses.py", line 352, in __call__
+    raise RuntimeError(f"File at path {self.path} does not exist.")
+RuntimeError: File at path app/static/index.html does not exist.
+2026-01-16 11:36:54,821 - uvicorn.access - INFO - 127.0.0.1:45252 - "GET / HTTP/1.1" 500
+2026-01-16 11:36:54,821 - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/responses.py", line 349, in __call__
+    stat_result = await anyio.to_thread.run_sync(os.stat, self.path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2502, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'app/static/index.html'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 410, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/fastapi/applications.py", line 1135, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/fastapi/routing.py", line 115, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/fastapi/routing.py", line 102, in app
+    await response(scope, receive, send)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/starlette/responses.py", line 352, in __call__
+    raise RuntimeError(f"File at path {self.path} does not exist.")
+RuntimeError: File at path app/static/index.html does not exist.
+2026-01-16 11:38:01,433 - uvicorn.access - INFO - 127.0.0.1:60292 - "GET / HTTP/1.1" 200
+2026-01-16 11:38:01,892 - app - INFO - Nordpool provider initialized
+2026-01-16 11:38:01,892 - app - WARNING - ENTSO-E provider not available (missing API key)
+2026-01-16 11:38:01,893 - app - INFO - Initialized providers in order: ['Nordpool']
+2026-01-16 11:38:01,893 - app - INFO - Fetching 188 fetchable missing intervals from 2026-01-15 00:00:00+00:00 to 2026-01-16 22:45:00+00:00 (filtered out 100 future intervals)
+2026-01-16 11:38:01,893 - app - INFO - Split request into 1 chunks of max 30 days each
+2026-01-16 11:38:01,893 - app - INFO - Trying provider: Nordpool for 1 remaining chunks
+2026-01-16 11:38:01,893 - app - INFO - Fetching chunk 1/1: 2026-01-15 00:00:00+00:00 to 2026-01-16 22:45:00+00:00
+2026-01-16 11:38:02,221 - httpx - INFO - HTTP Request: GET https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?market=DayAhead&currency=EUR&deliveryArea=FI&date=2026-01-15 "HTTP/1.1 200 OK"
+2026-01-16 11:38:02,442 - httpx - INFO - HTTP Request: GET https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?market=DayAhead&currency=EUR&deliveryArea=FI&date=2026-01-16 "HTTP/1.1 200 OK"
+2026-01-16 11:38:02,470 - app - INFO - Chunk 1/1 returned 192 prices
+2026-01-16 11:38:02,470 - app - INFO - Successfully fetched 192 prices from providers
+2026-01-16 11:38:02,471 - app - INFO - Provider returned 192 prices, 188 are new
+2026-01-16 11:38:02,489 - app - INFO - Inserted 188 new prices into database
+2026-01-16 11:40:54,111 - app - INFO - Fetching 5 fetchable missing intervals from 2023-10-27 00:00:00+00:00 to 2023-10-27 01:00:00+00:00 (filtered out 0 future intervals)
+2026-01-16 11:40:54,112 - app - INFO - Split request into 1 chunks of max 30 days each
+2026-01-16 11:40:54,112 - app - INFO - Trying provider: Nordpool for 1 remaining chunks
+2026-01-16 11:40:54,112 - app - INFO - Fetching chunk 1/1: 2023-10-27 00:00:00+00:00 to 2023-10-27 01:00:00+00:00
+2026-01-16 11:40:54,480 - httpx - INFO - HTTP Request: GET https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?market=DayAhead&currency=EUR&deliveryArea=FI&date=2023-10-27 "HTTP/1.1 401 Unauthorized"
+2026-01-16 11:40:54,481 - app - WARNING - Failed to fetch data for 2023-10-27 00:00:00: Nordpool API returned status 401: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"Unauthorized","status":401,"traceId":"00-ee21b1291dbcad1a1a7bacda75d076f0-327dba720e16d781-00"}
+2026-01-16 11:40:54,481 - app - WARNING - Chunk 1/1 returned no data
+2026-01-16 11:40:54,481 - app - ERROR - Provider error: All 1 providers failed to fetch any data
+2026-01-16 11:40:54,482 - uvicorn.access - INFO - 127.0.0.1:45492 - "GET /prices?start_date=2023-10-27T00:00:00Z&end_date=2023-10-27T01:00:00Z HTTP/1.1" 200
+2026-01-16 11:41:14,751 - app - INFO - Fetching 5 fetchable missing intervals from 2025-01-01 00:00:00+00:00 to 2025-01-01 01:00:00+00:00 (filtered out 0 future intervals)
+2026-01-16 11:41:14,751 - app - INFO - Split request into 1 chunks of max 30 days each
+2026-01-16 11:41:14,751 - app - INFO - Trying provider: Nordpool for 1 remaining chunks
+2026-01-16 11:41:14,751 - app - INFO - Fetching chunk 1/1: 2025-01-01 00:00:00+00:00 to 2025-01-01 01:00:00+00:00
+2026-01-16 11:41:14,918 - httpx - INFO - HTTP Request: GET https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?market=DayAhead&currency=EUR&deliveryArea=FI&date=2025-01-01 "HTTP/1.1 401 Unauthorized"
+2026-01-16 11:41:14,919 - app - WARNING - Failed to fetch data for 2025-01-01 00:00:00: Nordpool API returned status 401: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"Unauthorized","status":401,"traceId":"00-36d2608182bdd5bdd9c1304c87001624-3478c397e0fc3da1-00"}
+2026-01-16 11:41:14,919 - app - WARNING - Chunk 1/1 returned no data
+2026-01-16 11:41:14,919 - app - ERROR - Provider error: All 1 providers failed to fetch any data
+2026-01-16 11:41:14,920 - uvicorn.access - INFO - 127.0.0.1:40606 - "GET /prices?start_date=2025-01-01T00:00:00&end_date=2025-01-01T01:00:00 HTTP/1.1" 200
+2026-01-16 11:41:35,157 - app - INFO - Fetching 5 fetchable missing intervals from 2025-01-01 00:00:00+00:00 to 2025-01-01 01:00:00+00:00 (filtered out 0 future intervals)
+2026-01-16 11:41:35,157 - app - INFO - Split request into 1 chunks of max 30 days each
+2026-01-16 11:41:35,157 - app - INFO - Trying provider: Nordpool for 1 remaining chunks
+2026-01-16 11:41:35,157 - app - INFO - Fetching chunk 1/1: 2025-01-01 00:00:00+00:00 to 2025-01-01 01:00:00+00:00
+2026-01-16 11:41:35,566 - httpx - INFO - HTTP Request: GET https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?market=DayAhead&currency=EUR&deliveryArea=FI&date=2025-01-01 "HTTP/1.1 401 Unauthorized"
+2026-01-16 11:41:35,567 - app - WARNING - Failed to fetch data for 2025-01-01 00:00:00: Nordpool API returned status 401: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"Unauthorized","status":401,"traceId":"00-58ffe223994c6fcecdc664a2727cf3e2-271f7a2f8ec979d8-00"}
+2026-01-16 11:41:35,567 - app - WARNING - Chunk 1/1 returned no data
+2026-01-16 11:41:35,567 - app - ERROR - Provider error: All 1 providers failed to fetch any data
+2026-01-16 11:41:35,567 - uvicorn.access - INFO - 127.0.0.1:58020 - "GET /prices?start_date=2025-01-01T00:00:00&end_date=2025-01-01T01:00:00&timezone_str=UTC HTTP/1.1" 200
+2026-01-16 11:41:58,419 - app - INFO - Fetching 5 fetchable missing intervals from 2025-01-01 00:00:00+00:00 to 2025-01-01 01:00:00+00:00 (filtered out 0 future intervals)
+2026-01-16 11:41:58,419 - app - INFO - Split request into 1 chunks of max 30 days each
+2026-01-16 11:41:58,419 - app - INFO - Trying provider: Nordpool for 1 remaining chunks
+2026-01-16 11:41:58,419 - app - INFO - Fetching chunk 1/1: 2025-01-01 00:00:00+00:00 to 2025-01-01 01:00:00+00:00
+2026-01-16 11:41:58,583 - httpx - INFO - HTTP Request: GET https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?market=DayAhead&currency=EUR&deliveryArea=FI&date=2025-01-01 "HTTP/1.1 401 Unauthorized"
+2026-01-16 11:41:58,585 - app - WARNING - Failed to fetch data for 2025-01-01 00:00:00: Nordpool API returned status 401: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"Unauthorized","status":401,"traceId":"00-45b871233a5c3a7338402d4cf97e9843-4f54d7ee54027103-00"}
+2026-01-16 11:41:58,585 - app - WARNING - Chunk 1/1 returned no data
+2026-01-16 11:41:58,585 - app - ERROR - Provider error: All 1 providers failed to fetch any data
+2026-01-16 11:41:58,585 - uvicorn.access - INFO - 127.0.0.1:57468 - "GET /prices?start_date=2025-01-01T00:00:00Z&end_date=2025-01-01T01:00:00Z HTTP/1.1" 200
+2026-01-16 11:42:25,137 - app - INFO - Fetching 93 fetchable missing intervals from 2025-01-01 00:00:00+00:00 to 2025-01-01 23:00:00+00:00 (filtered out 0 future intervals)
+2026-01-16 11:42:25,139 - app - INFO - Split request into 1 chunks of max 30 days each
+2026-01-16 11:42:25,139 - app - INFO - Trying provider: Nordpool for 1 remaining chunks
+2026-01-16 11:42:25,139 - app - INFO - Fetching chunk 1/1: 2025-01-01 00:00:00+00:00 to 2025-01-01 23:00:00+00:00
+2026-01-16 11:42:25,386 - httpx - INFO - HTTP Request: GET https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?market=DayAhead&currency=EUR&deliveryArea=FI&date=2025-01-02 "HTTP/1.1 401 Unauthorized"
+2026-01-16 11:42:25,593 - httpx - INFO - HTTP Request: GET https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?market=DayAhead&currency=EUR&deliveryArea=FI&date=2025-01-01 "HTTP/1.1 401 Unauthorized"
+2026-01-16 11:42:25,595 - app - WARNING - Failed to fetch data for 2025-01-01 00:00:00: Nordpool API returned status 401: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"Unauthorized","status":401,"traceId":"00-c167f2c6b372fc4b8b180a7d4b28dcee-91603ce75a27f1d7-00"}
+2026-01-16 11:42:25,595 - app - WARNING - Failed to fetch data for 2025-01-02 00:00:00: Nordpool API returned status 401: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"Unauthorized","status":401,"traceId":"00-92433d22618230f0d8277aff314cfd85-ac7de202629613b3-00"}
+2026-01-16 11:42:25,595 - app - WARNING - Chunk 1/1 returned no data
+2026-01-16 11:42:25,595 - app - ERROR - Provider error: All 1 providers failed to fetch any data
+2026-01-16 11:42:25,598 - uvicorn.access - INFO - 127.0.0.1:41450 - "GET /prices?start_date=2025-01-01T00:00:00Z&end_date=2025-01-01T23:00:00Z HTTP/1.1" 200
+2026-01-16 11:43:42,527 - uvicorn.access - INFO - 127.0.0.1:41348 - "GET /prices?start_date=2026-01-16T00:00:00Z&end_date=2026-01-16T01:00:00Z HTTP/1.1" 200
+2026-01-16 11:44:10,828 - uvicorn.access - INFO - 127.0.0.1:58608 - "GET / HTTP/1.1" 200
+2026-01-16 11:44:11,027 - uvicorn.access - INFO - 127.0.0.1:58608 - "GET /prices?start_date=2026-01-15T00:00:00.000Z&end_date=2026-01-17T23:59:00.000Z&timezone_str=UTC HTTP/1.1" 200
+2026-01-16 11:47:27,125 - uvicorn.error - INFO - Shutting down
+2026-01-16 11:47:27,227 - uvicorn.error - INFO - Waiting for application shutdown.
+2026-01-16 11:47:27,228 - uvicorn.error - INFO - Application shutdown complete.
+2026-01-16 11:47:27,228 - uvicorn.error - INFO - Finished server process [15722]
